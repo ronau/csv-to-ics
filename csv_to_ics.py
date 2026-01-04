@@ -48,10 +48,13 @@ def read_csv_file_and_generate_events(filename:str, delimiter:str = ';', contain
 
     try:
         with open(filename, mode='r', newline='', encoding='utf-8') as file:
+            linenum = 0
             csv_reader = csv.reader(file, delimiter=delimiter)
             if contains_header:
+                linenum += 1
                 next(csv_reader)
             for row in csv_reader:
+                linenum += 1
                 if len(row) != 4:
                     print(f"Skipping invalid row: {row}")
                     continue
@@ -59,7 +62,7 @@ def read_csv_file_and_generate_events(filename:str, delimiter:str = ';', contain
     except FileNotFoundError:
         log.error(f"Error: The file '{filename}' was not found.")
     except Exception as e:
-        log.error(f"An error occurred: {e}")
+        log.error(f"An error occurred (line {linenum}): {e}")
 
     return vevents
 
